@@ -1,0 +1,40 @@
+{
+  "en": {
+    "user": "Document-review operations lead",
+    "problem": "Instructions embedded in an untrusted document can trigger an unsafe agent action.",
+    "workflow": "Choose policy on or off, inspect hostile document rules, then read the action decision.",
+    "decision": "Permit or block an external action after document review.",
+    "value": "Makes the policy boundary visible before an agent acts.",
+    "visual": "Document instructions pass through a rule gate to an action card.",
+    "scenarioA": {
+      "title": "Policy on",
+      "input": "Hostile document requesting an approval email; policy enabled.",
+      "observation": "Rules block the external action."
+    },
+    "scenarioB": {
+      "title": "Benign summary without policy",
+      "input": "Benign document requesting a summary; policy disabled.",
+      "observation": "The local summary action is allowed; no external action is executed."
+    },
+    "limitation": "The document and rules are local examples; no external action is attempted. The presets change both document and policy; toggle policy on the same document to isolate its effect."
+  },
+  "es": {
+    "user": "Responsable de operaciones de revisión documental",
+    "problem": "Instrucciones dentro de un documento no confiable pueden activar una acción insegura de agente.",
+    "workflow": "Elige política activada o desactivada, inspecciona reglas del documento hostil y lee la decisión de acción.",
+    "decision": "Permitir o bloquear una acción externa después de revisar el documento.",
+    "value": "Hace visible el límite de política antes de que actúe un agente.",
+    "visual": "Instrucciones de documento pasan por una compuerta de reglas hacia una tarjeta de acción.",
+    "scenarioA": {
+      "title": "Política activada",
+      "input": "Documento hostil que pide enviar un correo de aprobación; política activada.",
+      "observation": "Las reglas bloquean la acción externa."
+    },
+    "scenarioB": {
+      "title": "Resumen benigno sin política",
+      "input": "Documento benigno que pide un resumen; política desactivada.",
+      "observation": "Se permite el resumen local; no se ejecuta ninguna acción externa."
+    },
+    "limitation": "El documento y las reglas son ejemplos locales; no se intenta ninguna acción externa. Los escenarios cambian documento y política; alterna la política sobre el mismo documento para aislar su efecto."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "repository": "doorman",
+  "scope": "Real React component with controlled locale; Next routes not tested.",
+  "checks": [
+    {
+      "locale": "en",
+      "scenarios": [
+        {
+          "preset": "Policy on\nHostile document requesting an approval email; policy enabled.",
+          "outcome": "Action blocked\n\n2 safeguards prevented the external action."
+        },
+        {
+          "preset": "Benign summary without policy\nBenign document requesting a summary; policy disabled.",
+          "outcome": "Action permitted\n\nNo rule fired for this input."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    },
+    {
+      "locale": "es",
+      "scenarios": [
+        {
+          "preset": "Política activada\nDocumento hostil que pide enviar un correo de aprobación; política activada.",
+          "outcome": "Acción bloqueada\n\n2 salvaguardas evitaron la acción externa."
+        },
+        {
+          "preset": "Resumen benigno sin política\nDocumento benigno que pide un resumen; política desactivada.",
+          "outcome": "Acción permitida\n\nNo se activó una regla para esta entrada."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    }
+  ],
+  "errors": []
+}
