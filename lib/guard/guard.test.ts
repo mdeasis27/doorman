@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { classifyDocument, runGuard } from "./guard";
 import { ATTACKS, BENIGN } from "./corpus";
+import { runCorpus } from "./demo";
+import corpusFixture from "./fixtures/corpus.json";
 
 describe("classifyDocument", () => {
   it("blocks a direct injection and names the rule", () => {
@@ -37,5 +39,35 @@ describe("runGuard", () => {
       const r = runGuard(attack.payload, true);
       expect(r.blockedBy.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("layers", () => {
+  const escaped = (layers: { rules: boolean; allowlist: boolean }) => runCorpus(layers).filter((i) => i.outcome === "escaped").map((i) => i.id);
+
+  it("each layer stops a different set of attacks", () => {
+    expect(escaped({ rules: true, allowlist: false })).toEqual(["a03", "a10"]);
+    expect(escaped({ rules: false, allowlist: true })).toEqual([]);
+    expect(escaped({ rules: false, allowlist: false })).toHaveLength(12);
+    expect(escaped({ rules: true, allowlist: true })).toEqual([]);
+  });
+
+  it("normal documents stay clean under every setting, attacks first then normal ones", () => {
+    for (const layers of [{ rules: true, allowlist: true }, { rules: true, allowlist: false }, { rules: false, allowlist: false }]) {
+      const items = runCorpus(layers);
+      expect(items).toHaveLength(20);
+      expect(items.slice(12).every((i) => !i.hostile && i.outcome === "clean")).toBe(true);
+    }
+  });
+
+  it("the boolean switch still means both layers on or both off", () => {
+    for (const a of ATTACKS) {
+      expect(runGuard(a.payload, true)).toEqual(runGuard(a.payload, { rules: true, allowlist: true }));
+      expect(runGuard(a.payload, false)).toEqual(runGuard(a.payload, { rules: false, allowlist: false }));
+    }
+  });
+
+  it("matches the outcomes pinned for Python", () => {
+    for (const [name, layers] of Object.entries(corpusFixture.layers)) expect(runCorpus(layers).map((i) => i.outcome), name).toEqual(corpusFixture.expected[name as keyof typeof corpusFixture.expected]);
   });
 });
