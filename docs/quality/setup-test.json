@@ -1,0 +1,7 @@
+{
+  "command": "pnpm test",
+  "exitCode": 0,
+  "testCount": 8,
+  "verifiedAt": "2026-10-01T11:27:11.0942306-06:00",
+  "log": "docs/quality/setup-test.log"
+}

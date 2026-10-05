@@ -1,0 +1,46 @@
+{
+  "repository": "doorman",
+  "checks": [
+    {
+      "locale": "en",
+      "htmlLang": "en",
+      "buttons": [
+        "Run guard path",
+        "Cancel",
+        "Reset"
+      ],
+      "inputs": 2,
+      "clicked": "Run guard path",
+      "traceEvents": 3,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    },
+    {
+      "locale": "es",
+      "htmlLang": "es",
+      "buttons": [
+        "Ejecutar protección",
+        "Cancelar",
+        "Reiniciar"
+      ],
+      "inputs": 2,
+      "clicked": "Ejecutar protección",
+      "traceEvents": 3,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    }
+  ],
+  "errors": [],
+  "legacyRedirectRetainsQuery": true,
+  "unsupportedLocale404": true,
+  "translatedBodyDiffers": true,
+  "reducedMotionDisablesPlayback": true,
+  "mobileNoOverflow": true,
+  "noExternalOrApiRequests": true
+}
