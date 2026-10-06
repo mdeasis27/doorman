@@ -1,14 +1,24 @@
-import { runExperience, type ExperienceInput, type ExperienceResult } from "./adapter";
-import type { DemoAdapter } from "./types";
-export type MissionResult = ExperienceResult & { comparison: { on: ExperienceResult; off: ExperienceResult } };
-export function authorizationOutcome(result: ExperienceResult): "none" | "permitted" | "blocked" {
-  return result.requested.length === 0 ? "none" : result.executed.length > 0 ? "permitted" : "blocked";
-}
-export const runMission: DemoAdapter<ExperienceInput, MissionResult> = async (input, signal, onEvent) => {
-  const snapshot = { ...input }; const started = performance.now();
-  const selected = await runExperience(snapshot, signal, onEvent);
-  const on = await runExperience({ ...snapshot, hardened: true }, signal, () => {});
-  const off = await runExperience({ ...snapshot, hardened: false }, signal, () => {});
+import { runCorpus } from "@/lib/guard/demo";
+import type { GuardLayers } from "@/lib/guard/guard";
+import type { DemoAdapter, TraceEvent } from "./types";
+
+export type MissionResult = { items: ReturnType<typeof runCorpus>; escaped: number; comparison: { mine: number; both: number } };
+
+const escapedCount = (items: ReturnType<typeof runCorpus>) => items.filter((i) => i.outcome === "escaped").length;
+const STEP = 5;
+
+/** Runs the 20 documents through the chosen layers; the trace reveals them five at a time. */
+export const runMission: DemoAdapter<GuardLayers, MissionResult> = async (layers, signal, onEvent) => {
+  const startedAt = performance.now();
+  const items = runCorpus(layers);
+  const trace: TraceEvent[] = [];
+  for (let i = 0; i < items.length; i += STEP) {
+    if (signal.aborted) throw new DOMException("Aborted", "AbortError");
+    const event: TraceEvent = { id: `batch-${i / STEP + 1}`, step: i / STEP + 1, kind: "guard", messageKey: `batch.${i / STEP + 1}`, timestampMs: performance.now() - startedAt, evidenceIds: items.slice(i, i + STEP).map((d) => d.id) };
+    trace.push(event);
+    onEvent(event);
+  }
   if (signal.aborted) throw new DOMException("Aborted", "AbortError");
-  return { ...selected, executionMs: performance.now() - started, result: { ...selected.result, comparison: { on: on.result, off: off.result } } };
+  const escaped = escapedCount(items);
+  return { input: layers, result: { items, escaped, comparison: { mine: escaped, both: escapedCount(runCorpus({ rules: true, allowlist: true })) } }, trace, executionMs: performance.now() - startedAt, mode: "local" };
 };

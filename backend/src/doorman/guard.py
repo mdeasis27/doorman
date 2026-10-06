@@ -72,16 +72,25 @@ def extract_irreversible_requests(text: str) -> list[str]:
     return list(dict.fromkeys(actions))
 
 
-def run_guard(document: str, hardened: bool) -> dict:
-    input_verdict = classify_document(document) if hardened else {"verdict": "safe", "firedRules": [], "risk": 0}
+def run_guard(document: str, hardened: bool | dict) -> dict:
+    """`hardened` is True/False (both layers on/off) or {"rules": bool, "allowlist": bool}."""
+    layers = {"rules": hardened, "allowlist": hardened} if isinstance(hardened, bool) else hardened
+    input_verdict = classify_document(document) if layers["rules"] else {"verdict": "safe", "firedRules": [], "risk": 0}
     requested = extract_irreversible_requests(document)
     executed: list[str] = []
     blocked_by: list[str] = []
-    if hardened and input_verdict["verdict"] == "blocked":
+    rejected = layers["rules"] and input_verdict["verdict"] == "blocked"
+    if rejected:
         blocked_by.extend(f"input:{r['id']}" for r in input_verdict["firedRules"])
     for action in requested:
-        if hardened:
+        if layers["allowlist"]:
             blocked_by.append(f"tool:{action}")
-        else:
+        elif not rejected:
             executed.append(action)
     return {"inputVerdict": input_verdict, "requested": requested, "executed": executed, "blockedBy": blocked_by}
+
+
+def run_corpus(attacks: list[dict], benign: list[dict], layers: dict) -> list[str]:
+    """Outcome per document, attacks first: clean (normal), stopped (attack), escaped (an action ran)."""
+    docs = [(a["payload"], True) for a in attacks] + [(b["text"], False) for b in benign]
+    return ["escaped" if run_guard(text, layers)["executed"] else "stopped" if hostile else "clean" for text, hostile in docs]

@@ -64,8 +64,13 @@ export type GuardResult = {
   blockedBy: string[];
 };
 
-export function runGuard(document: string, hardened: boolean): GuardResult {
-  const inputVerdict = hardened
+/** Two independent layers: `rules` screens the document, `allowlist` refuses every irreversible action a document asks for.
+ *  `true` / `false` still mean both on / both off. */
+export type GuardLayers = { rules: boolean; allowlist: boolean };
+
+export function runGuard(document: string, hardened: boolean | GuardLayers): GuardResult {
+  const layers = typeof hardened === "boolean" ? { rules: hardened, allowlist: hardened } : hardened;
+  const inputVerdict = layers.rules
     ? classifyDocument(document)
     : { verdict: "safe" as const, firedRules: [], risk: 0 };
 
@@ -73,15 +78,16 @@ export function runGuard(document: string, hardened: boolean): GuardResult {
   const executed: IrreversibleAction[] = [];
   const blockedBy: string[] = [];
 
-  if (hardened && inputVerdict.verdict === "blocked") {
+  const rejected = layers.rules && inputVerdict.verdict === "blocked";
+  if (rejected) {
     inputVerdict.firedRules.forEach((r) => blockedBy.push(`input:${r.id}`));
   }
 
   for (const action of requested) {
-    if (hardened) {
+    if (layers.allowlist) {
       // Documents can never trigger irreversible actions, even when classified safe.
       blockedBy.push(`tool:${action}`);
-    } else {
+    } else if (!rejected) {
       executed.push(action);
     }
   }

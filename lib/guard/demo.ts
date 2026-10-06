@@ -3,7 +3,18 @@
 // positive rate on benign resumes, and a per-attack table of what blocked.
 
 import { ATTACKS, BENIGN } from "./corpus";
-import { runGuard } from "./guard";
+import { runGuard, type GuardLayers } from "./guard";
+
+export type CorpusOutcome = "clean" | "stopped" | "escaped";
+
+/** The 12 attacks then the 8 normal documents, each with what happened under the given layers. */
+export function runCorpus(layers: GuardLayers): { id: string; hostile: boolean; outcome: CorpusOutcome }[] {
+  const docs = [...ATTACKS.map((a) => ({ id: a.id, text: a.payload, hostile: true })), ...BENIGN.map((b) => ({ id: b.id, text: b.text, hostile: false }))];
+  return docs.map((d) => {
+    const escaped = runGuard(d.text, layers).executed.length > 0;
+    return { id: d.id, hostile: d.hostile, outcome: escaped ? "escaped" : d.hostile ? "stopped" : "clean" };
+  });
+}
 
 export function getRedTeamReport() {
   const perAttack = ATTACKS.map((a) => {

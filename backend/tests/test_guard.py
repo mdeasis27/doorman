@@ -29,3 +29,18 @@ def test_hardened_never_executes():
 def test_every_block_traceable():
     for attack in ATTACKS:
         assert len(run_guard(attack, True)["blockedBy"]) > 0
+
+
+def test_layers_match_shared_fixture():
+    import json
+    from pathlib import Path
+    from doorman.guard import run_corpus
+    fx = json.loads((Path(__file__).parent / "fixtures" / "corpus.json").read_text(encoding="utf-8"))
+    for name, layers in fx["layers"].items():
+        assert run_corpus(fx["attacks"], fx["benign"], layers) == fx["expected"][name], name
+
+
+def test_boolean_still_means_both_layers():
+    for attack in ATTACKS:
+        assert run_guard(attack, True) == run_guard(attack, {"rules": True, "allowlist": True})
+        assert run_guard(attack, False) == run_guard(attack, {"rules": False, "allowlist": False})
