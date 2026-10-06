@@ -35,7 +35,8 @@ def test_layers_match_shared_fixture():
     import json
     from pathlib import Path
     from doorman.guard import run_corpus
-    fx = json.loads((Path(__file__).parent / "fixtures" / "corpus.json").read_text(encoding="utf-8"))
+    # One fixture shared with vitest: lib/guard/fixtures/corpus.json
+    fx = json.loads((Path(__file__).resolve().parents[2] / "lib" / "guard" / "fixtures" / "corpus.json").read_text(encoding="utf-8"))
     for name, layers in fx["layers"].items():
         assert run_corpus(fx["attacks"], fx["benign"], layers) == fx["expected"][name], name
 

@@ -67,7 +67,7 @@ describe("layers", () => {
     }
   });
 
-  it("matches the outcomes pinned for Python", () => {
-    for (const [name, layers] of Object.entries(corpusFixture.layers)) expect(runCorpus(layers).map((i) => i.outcome), name).toEqual(corpusFixture.expected[name as keyof typeof corpusFixture.expected]);
+  it("matches the outcome, stopping layer and executed actions pinned for Python", () => {
+    for (const [name, layers] of Object.entries(corpusFixture.layers)) expect(runCorpus(layers).map(({ outcome, stoppedBy, executed }) => ({ outcome, stoppedBy, executed })), name).toEqual(corpusFixture.expected[name as keyof typeof corpusFixture.expected]);
   });
 });

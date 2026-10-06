@@ -90,7 +90,14 @@ def run_guard(document: str, hardened: bool | dict) -> dict:
     return {"inputVerdict": input_verdict, "requested": requested, "executed": executed, "blockedBy": blocked_by}
 
 
-def run_corpus(attacks: list[dict], benign: list[dict], layers: dict) -> list[str]:
-    """Outcome per document, attacks first: clean (normal), stopped (attack), escaped (an action ran)."""
+def run_corpus(attacks: list[dict], benign: list[dict], layers: dict) -> list[dict]:
+    """Per document, attacks first: outcome (clean, stopped, escaped), the layer that stopped it and the actions that ran."""
     docs = [(a["payload"], True) for a in attacks] + [(b["text"], False) for b in benign]
-    return ["escaped" if run_guard(text, layers)["executed"] else "stopped" if hostile else "clean" for text, hostile in docs]
+    out: list[dict] = []
+    for text, hostile in docs:
+        r = run_guard(text, layers)
+        rejected = layers["rules"] and r["inputVerdict"]["verdict"] == "blocked"
+        stopped_by = "rules" if rejected else "allowlist" if any(b.startswith("tool:") for b in r["blockedBy"]) else None
+        outcome = "escaped" if r["executed"] else "stopped" if hostile else "clean"
+        out.append({"outcome": outcome, "stoppedBy": stopped_by, "executed": r["executed"]})
+    return out

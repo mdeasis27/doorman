@@ -103,92 +103,443 @@
   },
   "expected": {
     "both": [
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean"
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      }
     ],
     "rules": [
-      "stopped",
-      "stopped",
-      "escaped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "escaped",
-      "stopped",
-      "stopped",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean"
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate",
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "rules",
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      }
     ],
     "allowlist": [
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "stopped",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean"
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "stopped",
+        "stoppedBy": "allowlist",
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      }
     ],
     "none": [
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "escaped",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean",
-      "clean"
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate",
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate",
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "write_ats"
+        ]
+      },
+      {
+        "outcome": "escaped",
+        "stoppedBy": null,
+        "executed": [
+          "email_candidate"
+        ]
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      },
+      {
+        "outcome": "clean",
+        "stoppedBy": null,
+        "executed": []
+      }
     ]
   }
 }

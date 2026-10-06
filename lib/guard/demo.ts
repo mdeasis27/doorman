@@ -3,16 +3,21 @@
 // positive rate on benign resumes, and a per-attack table of what blocked.
 
 import { ATTACKS, BENIGN } from "./corpus";
-import { runGuard, type GuardLayers } from "./guard";
+import { runGuard, type GuardLayers, type IrreversibleAction } from "./guard";
 
 export type CorpusOutcome = "clean" | "stopped" | "escaped";
+/** Which layer turned the document away: the document check, the action list, or neither. */
+export type StoppedBy = "rules" | "allowlist" | null;
+export type CorpusItem = { id: string; hostile: boolean; outcome: CorpusOutcome; stoppedBy: StoppedBy; executed: IrreversibleAction[] };
 
 /** The 12 attacks then the 8 normal documents, each with what happened under the given layers. */
-export function runCorpus(layers: GuardLayers): { id: string; hostile: boolean; outcome: CorpusOutcome }[] {
+export function runCorpus(layers: GuardLayers): CorpusItem[] {
   const docs = [...ATTACKS.map((a) => ({ id: a.id, text: a.payload, hostile: true })), ...BENIGN.map((b) => ({ id: b.id, text: b.text, hostile: false }))];
   return docs.map((d) => {
-    const escaped = runGuard(d.text, layers).executed.length > 0;
-    return { id: d.id, hostile: d.hostile, outcome: escaped ? "escaped" : d.hostile ? "stopped" : "clean" };
+    const r = runGuard(d.text, layers);
+    const stoppedBy: StoppedBy = layers.rules && r.inputVerdict.verdict === "blocked" ? "rules" : r.blockedBy.some((b) => b.startsWith("tool:")) ? "allowlist" : null;
+    const outcome: CorpusOutcome = r.executed.length > 0 ? "escaped" : d.hostile ? "stopped" : "clean";
+    return { id: d.id, hostile: d.hostile, outcome, stoppedBy, executed: r.executed };
   });
 }
 

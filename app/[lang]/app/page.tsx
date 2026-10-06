@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { useLocale } from "@/design-system/i18n/context";
 import { TracePlayer } from "@/design-system/demo/trace-player";
 import { MissionPrompt, MissionComparison } from "@/design-system/demo/mission-lab";
@@ -25,10 +25,19 @@ export default function Page() {
   const result = run?.result;
   // Section 03 waits for the tape to finish; keyed to the trace so every new run resets it.
   const [playedTrace, setPlayedTrace] = useState<typeof demo.trace | null>(null);
-  const played = demo.trace.length === 0 || playedTrace === demo.trace;
+  // The scene keeps walking after the last trace step; section 03 also waits for it to settle.
+  const [settledTrace, setSettledTrace] = useState<typeof demo.trace | null>(null);
+  const [skippedTrace, setSkippedTrace] = useState<typeof demo.trace | null>(null);
+  const played = demo.trace.length === 0 || (playedTrace === demo.trace && settledTrace === demo.trace);
+  // ponytail: TracePlayer has no "show all" callback, so the click is matched by its label; add one in the hub's design-system and drop this.
+  const SHOW_ALL = { en: "Show all", es: "Ver todo" }[locale];
+  const onPlayerClick = (e: MouseEvent) => {
+    const button = (e.target as HTMLElement).closest("button");
+    if (button) setSkippedTrace(button.textContent === SHOW_ALL ? demo.trace : null);
+  };
   const clear = () => { setPrediction(null); demo.reset(); };
   const reset = () => { setRules(DEFAULT.rules); setAllowlist(DEFAULT.allowlist); clear(); };
-  const scene = (frame: typeof COMPLETE_FRAME) => run && result ? <DoormanStoryScene frame={frame} layers={run.input} result={result} locale={locale} /> : null;
+  const scene = (frame: typeof COMPLETE_FRAME) => run && result ? <DoormanStoryScene frame={frame} layers={run.input} result={result} locale={locale} skip={skippedTrace === demo.trace} onSettled={() => setSettledTrace(demo.trace)} /> : null;
 
   return <main className="mx-auto max-w-5xl px-5 py-8 text-foreground sm:py-12">
     <StoryHero name={t.name} oneLiner={t.oneLiner} chips={t.chips} />
@@ -53,7 +62,7 @@ export default function Page() {
           </div>
           {demo.error ? <p role="alert" className="mt-3 text-sm text-danger">{t.tryIt.error}</p> : null}
         </section>
-        <section className="min-w-0">
+        <section className="min-w-0" onClickCapture={onPlayerClick}>
           {run && result
             ? (demo.trace.length === 0 ? scene(COMPLETE_FRAME) : <TracePlayer collapsible autoPlay headingLevel="h3" onComplete={() => setPlayedTrace(demo.trace)} translate={key => traceCopy(locale, key)} trace={demo.trace} locale={locale} executionMs={run.executionMs} renderStage={scene} />)
             : <p className="rounded-xl border border-dashed border-border p-8 text-sm text-muted-foreground">{t.tryIt.idle}</p>}
