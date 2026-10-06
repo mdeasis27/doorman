@@ -35,4 +35,13 @@ describe("Doorman story copy", () => {
     expect(STORY.es.tryIt.question(true, true)).toContain("con las dos capas encendidas");
     expect(STORY.en.tryIt.question(false, false)).toContain("with no protection");
   });
+
+  it("counts the documents in the scene labels from the run", () => {
+    const c = { clean: 3, stopped: 2, escaped: 1 };
+    const l = { rules: true, allowlist: false };
+    expect(STORY.en.scene.summary(c, l)).toMatch(/^6 documents/);
+    expect(STORY.es.scene.summary(c, l)).toMatch(/^6 documentos/);
+    expect(STORY.en.scene.tapeLabel(7)).toContain("7 documents");
+    expect(STORY.es.scene.tapeLabel(7)).toContain("7 documentos");
+  });
 });

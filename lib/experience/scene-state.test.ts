@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 import { tapeCounts } from "@/design-system/demo/outcome-tape";
-import { doormanCells, revealedDocs, walkerRoutes, pointAt, routeEnd, FLOOR_Y, STREET_X } from "./scene-state";
+import { doormanCells, revealedDocs, walkStarts, walkerRoutes, pointAt, routeEnd, FLOOR_Y, STREET_X } from "./scene-state";
 import { runMission } from "./mission";
 
 const items = async (rules: boolean, allowlist: boolean) => (await runMission({ rules, allowlist }, new AbortController().signal, () => {})).result.items;
@@ -44,4 +44,11 @@ it("interpolates between waypoints and settles at the last one", () => {
   expect(pointAt(route, 1.5)).toEqual([10, 10]);
   expect(pointAt(route, 9)).toEqual([10, 20]);
   expect(routeEnd(route)).toBe(2);
+});
+
+it("staggers new walkers and restarts every walker when the reveal goes back", () => {
+  expect(walkStarts([], 3, 1000, 100)).toEqual([1000, 1100, 1200]);
+  expect(walkStarts([1000, 1100], 4, 5000, 100)).toEqual([1000, 1100, 5000, 5100]);
+  // replay from the end: the first batch walks again instead of appearing already arrived
+  expect(walkStarts([1, 2, 3, 4], 2, 9000, 100)).toEqual([9000, 9100]);
 });

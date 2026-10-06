@@ -6,7 +6,7 @@ import { StoryStage } from "@/design-system/demo/decision-lab";
 import { OutcomeTape, useReducedMotion } from "@/design-system/demo/project-story";
 import type { GuardLayers } from "@/lib/guard/guard";
 import type { MissionResult } from "./mission";
-import { DESK_X, FLOOR_Y, GATE_X, LANE_Y, LIFT_X, STREET_X, doormanCells, pointAt, revealedDocs, routeEnd, walkerRoutes } from "./scene-state";
+import { DESK_X, FLOOR_Y, GATE_X, LANE_Y, LIFT_X, STREET_X, doormanCells, pointAt, revealedDocs, routeEnd, walkStarts, walkerRoutes } from "./scene-state";
 import { STORY } from "./story";
 
 const STAGGER_MS = 180;
@@ -18,10 +18,7 @@ function useWalkClock(revealed: number, durations: number[], frozen: boolean): n
   const [elapsed, setElapsed] = useState<number[]>([]);
   useEffect(() => {
     if (frozen) return;
-    const s = starts.current;
-    s.length = Math.min(s.length, revealed);
-    const now = performance.now();
-    for (let i = s.length, k = 0; i < revealed; i++, k++) s.push(now + k * STAGGER_MS);
+    const s = (starts.current = walkStarts(starts.current, revealed, performance.now(), STAGGER_MS));
     let raf = 0;
     const tick = (t: number) => {
       const next = s.map((start) => Math.max(0, (t - start) / 1000));
@@ -34,21 +31,30 @@ function useWalkClock(revealed: number, durations: number[], frozen: boolean): n
   return elapsed;
 }
 
-export function DoormanStoryScene({ frame, layers, result, locale }: { frame: PlaybackFrame<TraceEvent>; layers: GuardLayers; result: MissionResult; locale: "en" | "es" }) {
+/**
+ * `skip`: the visitor asked for the whole trace ("Show all"), so the scene jumps to its end once the frame is complete.
+ * `onSettled`: fires once every document has finished walking, which is when the comparison below may appear.
+ */
+export function DoormanStoryScene({ frame, layers, result, locale, skip = false, onSettled }: { frame: PlaybackFrame<TraceEvent>; layers: GuardLayers; result: MissionResult; locale: "en" | "es"; skip?: boolean; onSettled?: () => void }) {
   const copy = STORY[locale].scene;
   const b = copy.building;
   const reduced = useReducedMotion();
+  const jump = reduced || (skip && frame.complete);
   const items = result.items;
   const routes = useMemo(() => walkerRoutes(items), [items]);
   const durations = useMemo(() => routes.map(routeEnd), [routes]);
   const revealed = revealedDocs(frame, items.length, reduced);
-  const elapsed = useWalkClock(revealed, durations, reduced);
-  const t = (i: number) => (reduced ? Infinity : i < revealed ? (elapsed[i] ?? 0) : -1);
+  const elapsed = useWalkClock(revealed, durations, jump);
+  const t = (i: number) => (jump ? Infinity : i < revealed ? (elapsed[i] ?? 0) : -1);
   const arrived = (i: number) => t(i) >= durations[i];
 
   const done = items.filter((_, i) => arrived(i));
   const count = (o: "clean" | "stopped" | "escaped", list = done) => list.filter((d) => d.outcome === o).length;
   const hit = new Set(done.flatMap((d) => d.executed));
+  const settled = done.length === items.length;
+  const onSettledRef = useRef(onSettled);
+  useEffect(() => { onSettledRef.current = onSettled; });
+  useEffect(() => { if (settled) onSettledRef.current?.(); }, [settled]);
   const final = { clean: count("clean", items), stopped: count("stopped", items), escaped: count("escaped", items) };
   const riding = items.findIndex((d, i) => d.outcome === "escaped" && t(i) > routes[i][3][2] && t(i) < routes[i][4][2]);
   const cabY = riding >= 0 ? pointAt(routes[riding], t(riding))[1] : LANE_Y;
@@ -110,8 +116,8 @@ export function DoormanStoryScene({ frame, layers, result, locale }: { frame: Pl
       })}
     </svg>
     <div className="mt-6">
-      <OutcomeTape cells={doormanCells(items, arrived)} labels={copy.tape} ariaLabel={copy.tapeLabel} columns={10} />
-      <p className="mt-4 min-h-8 font-mono text-2xl font-semibold tracking-tight" aria-live="polite" data-scene-result>{done.length === items.length ? copy.escapedOf(final.escaped) : ""}</p>
+      <OutcomeTape cells={doormanCells(items, arrived)} labels={copy.tape} ariaLabel={copy.tapeLabel(items.length)} columns={10} />
+      <p className="mt-4 min-h-8 font-mono text-2xl font-semibold tracking-tight" aria-live="polite" data-scene-result>{settled ? copy.escapedOf(final.escaped) : ""}</p>
     </div>
   </StoryStage>;
 }

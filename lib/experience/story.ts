@@ -12,7 +12,7 @@ export interface DoormanStory {
   proves: { heading: Heading; text: string };
   engineers: { summary: string; points: string[]; repoLabel: string };
   scene: {
-    title: string; caption: string; tapeLabel: string; tape: { served: string; rerouted: string; lost: string }; escapedOf: (n: number) => string;
+    title: string; caption: string; tapeLabel: (n: number) => string; tape: { served: string; rerouted: string; lost: string }; escapedOf: (n: number) => string;
     building: { street: string; upstairs: string; email: string; ats: string; untouched: { email: string; ats: string }; hit: { email: string; ats: string }; lift: string; reception: string; doorman: (on: boolean) => string; barrier: (on: boolean) => string };
     summary: (c: { clean: number; stopped: number; escaped: number }, layers: { rules: boolean; allowlist: boolean }) => string;
   };
@@ -90,7 +90,7 @@ export const STORY: Record<"en" | "es", DoormanStory> = {
     scene: {
       title: "What each document tried, and what happened",
       caption: "Each figure is one document, attacks first with a note in hand. The doorman sends back what he catches, the barrier stops any action a document asks for, and whatever gets past both takes the lift and acts.",
-      tapeLabel: "Twenty documents, attacks first",
+      tapeLabel: (n) => `${n} documents, attacks first`,
       tape: { served: "normal document", rerouted: "attack sent back", lost: "action escaped" },
       escapedOf: (n) => (n === 0 ? "No action escaped" : `${n} of 12 attacks got an action through`),
       building: {
@@ -105,7 +105,7 @@ export const STORY: Record<"en" | "es", DoormanStory> = {
         doorman: (on) => (on ? "doorman: on" : "doorman: off"),
         barrier: (on) => (on ? "barrier: on" : "barrier: off"),
       },
-      summary: (c, l) => `Twenty documents arrive at the building. Doorman ${l.rules ? "on" : "off"}, barrier ${l.allowlist ? "on" : "off"}. ${c.clean} normal documents stay at reception, ${c.stopped} attacks are sent back to the street and ${c.escaped} take the lift and run an action.`,
+      summary: (c, l) => `${c.clean + c.stopped + c.escaped} documents arrive at the building. Doorman ${l.rules ? "on" : "off"}, barrier ${l.allowlist ? "on" : "off"}. ${c.clean} normal documents stay at reception, ${c.stopped} attacks are sent back to the street and ${c.escaped} take the lift and run an action.`,
     },
   },
   es: {
@@ -179,7 +179,7 @@ export const STORY: Record<"en" | "es", DoormanStory> = {
     scene: {
       title: "Qué intentó cada documento y qué pasó",
       caption: "Cada figura es un documento, primero los ataques con su nota en la mano. El portero devuelve lo que atrapa, la barrera detiene cualquier acción que pida un documento, y lo que pasa las dos sube en el ascensor y actúa.",
-      tapeLabel: "Veinte documentos, primero los ataques",
+      tapeLabel: (n) => `${n} documentos, primero los ataques`,
       tape: { served: "documento normal", rerouted: "ataque devuelto", lost: "acción que se escapó" },
       escapedOf: (n) => (n === 0 ? "No se escapó ninguna acción" : `${n} de 12 ataques lograron una acción`),
       building: {
@@ -194,7 +194,7 @@ export const STORY: Record<"en" | "es", DoormanStory> = {
         doorman: (on) => (on ? "portero: activo" : "portero: apagado"),
         barrier: (on) => (on ? "barrera: activa" : "barrera: apagada"),
       },
-      summary: (c, l) => `Veinte documentos llegan al edificio. Portero ${l.rules ? "activo" : "apagado"}, barrera ${l.allowlist ? "activa" : "apagada"}. ${c.clean} documentos normales se quedan en recepción, ${c.stopped} ataques vuelven a la calle y ${c.escaped} suben en el ascensor y ejecutan una acción.`,
+      summary: (c, l) => `${c.clean + c.stopped + c.escaped} documentos llegan al edificio. Portero ${l.rules ? "activo" : "apagado"}, barrera ${l.allowlist ? "activa" : "apagada"}. ${c.clean} documentos normales se quedan en recepción, ${c.stopped} ataques vuelven a la calle y ${c.escaped} suben en el ascensor y ejecutan una acción.`,
     },
   },
 };

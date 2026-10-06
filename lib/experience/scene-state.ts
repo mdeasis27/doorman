@@ -15,6 +15,13 @@ export function revealedDocs(frame: { visible: number; total: number; complete: 
   return Math.ceil((n * frame.visible) / frame.total);
 }
 
+/** Start times for the revealed walkers: new ones set off staggered; if the reveal went back (replay, previous step), everyone starts over. */
+export function walkStarts(prev: readonly number[], revealed: number, now: number, stagger: number): number[] {
+  const s = revealed < prev.length ? [] : [...prev];
+  for (let k = 0; s.length < revealed; k++) s.push(now + k * stagger);
+  return s;
+}
+
 export const COMPLETE_FRAME: PlaybackFrame<TraceEvent> = { visible: 0, total: 0, event: undefined, complete: true };
 
 // Building geometry in SVG units (viewBox 400 x 290). Ground floor below FLOOR_Y, upstairs above it.
