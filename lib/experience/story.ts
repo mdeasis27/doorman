@@ -1,7 +1,5 @@
 import type { Heading } from "@/design-system/demo/project-story";
 
-type NodeCopy = { name: string; sub: string; analogy: string };
-
 export interface DoormanStory {
   name: string;
   oneLiner: string;
@@ -13,7 +11,11 @@ export interface DoormanStory {
   fit: { heading: Heading; worthLabel: string; worth: string; notLabel: string; not: string };
   proves: { heading: Heading; text: string };
   engineers: { summary: string; points: string[]; repoLabel: string };
-  scene: { title: string; caption: string; statusLabels: { success: string; danger: string; off: string }; tapeLabel: string; nodes: { doc: NodeCopy; rules: NodeCopy; allowlist: NodeCopy; actions: NodeCopy }; tape: { served: string; rerouted: string; lost: string }; escapedOf: (n: number) => string };
+  scene: {
+    title: string; caption: string; tapeLabel: string; tape: { served: string; rerouted: string; lost: string }; escapedOf: (n: number) => string;
+    building: { street: string; upstairs: string; email: string; ats: string; untouched: { email: string; ats: string }; hit: { email: string; ats: string }; lift: string; reception: string; doorman: (on: boolean) => string; barrier: (on: boolean) => string };
+    summary: (c: { clean: number; stopped: number; escaped: number }, layers: { rules: boolean; allowlist: boolean }) => string;
+  };
 }
 
 export const STORY: Record<"en" | "es", DoormanStory> = {
@@ -87,17 +89,23 @@ export const STORY: Record<"en" | "es", DoormanStory> = {
     },
     scene: {
       title: "What each document tried, and what happened",
-      caption: "Watch the documents arrive five at a time, and see which layer stops each attack.",
-      statusLabels: { success: "on", danger: "an action ran from a document", off: "off" },
+      caption: "Each figure is one document, attacks first with a note in hand. The doorman sends back what he catches, the barrier stops any action a document asks for, and whatever gets past both takes the lift and acts.",
       tapeLabel: "Twenty documents, attacks first",
-      nodes: {
-        doc: { name: "Document", sub: "resume or email", analogy: "the delivery person" },
-        rules: { name: "Document check", sub: "hidden instructions", analogy: "checking the list" },
-        allowlist: { name: "Action list", sub: "irreversible actions", analogy: "what nobody takes up" },
-        actions: { name: "Email and tracker", sub: "what can't be undone", analogy: "upstairs" },
-      },
-      tape: { served: "normal document", rerouted: "attack stopped", lost: "action escaped" },
+      tape: { served: "normal document", rerouted: "attack sent back", lost: "action escaped" },
       escapedOf: (n) => (n === 0 ? "No action escaped" : `${n} of 12 attacks got an action through`),
+      building: {
+        street: "street",
+        upstairs: "Upstairs: what can't be undone",
+        email: "Email",
+        ats: "Applicant tracker",
+        untouched: { email: "not sent", ats: "no changes" },
+        hit: { email: "× email sent", ats: "× marked approved" },
+        lift: "lift",
+        reception: "reception",
+        doorman: (on) => (on ? "doorman: on" : "doorman: off"),
+        barrier: (on) => (on ? "barrier: on" : "barrier: off"),
+      },
+      summary: (c, l) => `Twenty documents arrive at the building. Doorman ${l.rules ? "on" : "off"}, barrier ${l.allowlist ? "on" : "off"}. ${c.clean} normal documents stay at reception, ${c.stopped} attacks are sent back to the street and ${c.escaped} take the lift and run an action.`,
     },
   },
   es: {
@@ -170,17 +178,23 @@ export const STORY: Record<"en" | "es", DoormanStory> = {
     },
     scene: {
       title: "Qué intentó cada documento y qué pasó",
-      caption: "Mira cómo llegan los documentos de cinco en cinco, y qué capa detiene cada ataque.",
-      statusLabels: { success: "encendida", danger: "se ejecutó una acción pedida por un documento", off: "apagada" },
+      caption: "Cada figura es un documento, primero los ataques con su nota en la mano. El portero devuelve lo que atrapa, la barrera detiene cualquier acción que pida un documento, y lo que pasa las dos sube en el ascensor y actúa.",
       tapeLabel: "Veinte documentos, primero los ataques",
-      nodes: {
-        doc: { name: "Documento", sub: "currículum o correo", analogy: "el repartidor" },
-        rules: { name: "Revisión", sub: "instrucciones ocultas", analogy: "revisar la lista" },
-        allowlist: { name: "Lista de acciones", sub: "acciones irreversibles", analogy: "lo que nadie sube" },
-        actions: { name: "Correo y sistema", sub: "lo que no se deshace", analogy: "el piso de arriba" },
-      },
-      tape: { served: "documento normal", rerouted: "ataque detenido", lost: "acción que se escapó" },
+      tape: { served: "documento normal", rerouted: "ataque devuelto", lost: "acción que se escapó" },
       escapedOf: (n) => (n === 0 ? "No se escapó ninguna acción" : `${n} de 12 ataques lograron una acción`),
+      building: {
+        street: "calle",
+        upstairs: "Arriba: lo que no se deshace",
+        email: "Correo",
+        ats: "Candidatos",
+        untouched: { email: "sin enviar", ats: "sin cambios" },
+        hit: { email: "× correo enviado", ats: "× aprobado" },
+        lift: "ascensor",
+        reception: "recepción",
+        doorman: (on) => (on ? "portero: activo" : "portero: apagado"),
+        barrier: (on) => (on ? "barrera: activa" : "barrera: apagada"),
+      },
+      summary: (c, l) => `Veinte documentos llegan al edificio. Portero ${l.rules ? "activo" : "apagado"}, barrera ${l.allowlist ? "activa" : "apagada"}. ${c.clean} documentos normales se quedan en recepción, ${c.stopped} ataques vuelven a la calle y ${c.escaped} suben en el ascensor y ejecutan una acción.`,
     },
   },
 };
