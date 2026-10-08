@@ -4,7 +4,7 @@
 [![CI](https://github.com/mdeasis27/doorman/actions/workflows/ci.yml/badge.svg)](https://github.com/mdeasis27/doorman/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 <!-- /community-badges -->
 
-[Español](README.es.md) · [Try the demo](https://doorman-manueldeasis27-2515s-projects.vercel.app/en/app) · [Case study](https://manueldeasis.com/en/projects/doorman) · [Source](https://github.com/mdeasis27/doorman)
+[Español](README.es.md) · [Try the demo](https://doorman-manueldeasis27-2515s-projects.vercel.app/en/app) · [Case study](https://portafolio-mdea.vercel.app/en/projects/doorman) · [Source](https://github.com/mdeasis27/doorman)
 
 ![Actual interactive local interface](docs/images/cover.png)
 
